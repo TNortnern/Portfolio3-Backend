@@ -1,12 +1,12 @@
 const { GraphQLObjectType } = require('graphql');
-const { addCategory } = require('./categorymutations');
-const { addProduct, deleteProduct } = require('./productsmutations');
+const { addTechnology } = require('./technologymutations');
+const { addProject, deleteProject } = require('./projectmutations');
 const RootMutation = new GraphQLObjectType({
   name: "Mutations",
   fields: {
-    addCategory,
-    addProduct,
-    deleteProduct
+    addTechnology,
+    addProject,
+    deleteProject
   },
 });
 

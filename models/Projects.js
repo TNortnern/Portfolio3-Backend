@@ -7,18 +7,14 @@ const projectSchema = new Schema({
     required: true,
   },
   description: String,
-  categoryId: {
-    type: String,
-    required: true,
-  },
   images: [String],
   technologies: [String],
   projectType: {
     type: String,
     required: true,
   },
-  codeLink: {
-    type: String,
+  links: {
+    type: Object,
     required: true,
   },
   importance: {

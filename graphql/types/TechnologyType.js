@@ -8,32 +8,32 @@ const {
 
 
 
-const CategoryType = new GraphQLObjectType({
-  name: "Category",
+const TechnologyType = new GraphQLObjectType({
+  name: "Technology",
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
     image: { type: GraphQLString },
     isDeleted: { type: GraphQLBoolean },
-    products: {
-      type: new GraphQLList(ProductType),
+    projects: {
+      type: new GraphQLList(ProjectType),
       resolve(parent, args) {
-        return Product.find({ categoryId: parent.id });
+        return Project.find({ technologies: { $in: parent.id } });
       },
     },
     createdAt: {
       type: GraphQLString,
-      resolve: (category) => category.createdAt,
+      resolve: (item) => item.createdAt,
     },
     updatedAt: {
       type: GraphQLString,
-      resolve: (category) => category.createdAt,
+      resolve: (item) => item.createdAt,
     },
   }),
 });
 
-module.exports = CategoryType;
+module.exports = TechnologyType;
 
-const ProductType = require("./ProductType");
-const Product = require("../../models/Product");
+const ProjectType = require("./ProjectType");
+const Project = require("../../models/Projects");

@@ -1,15 +1,15 @@
 const { GraphQLObjectType } = require('graphql')
-const product = require("./productqueries").product;
-const products = require("./productqueries").products;
-const category = require("./categoryqueries").category;
-const categories = require("./categoryqueries").categories;
+const project = require("./projectqueries").project;
+const projects = require("./projectqueries").projects;
+const technology = require("./technologyqueries").technology;
+const technologies = require("./technologyqueries").technologies;
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: () => ({
-    product,
-    products,
-    category,
-    categories
+    project,
+    projects,
+    technology,
+    technologies
   }),
 });
 
