@@ -25,36 +25,52 @@ const mutations = {
       importance: { type: GraphQLInt },
     },
     async resolve(parent, args) {
-      let filename;
-      if (args.image) {
-        const { filename, mimetype, createReadStream } = await args.image;
-        // Promisify the stream and store the file, then…
-        await new Promise((res) =>
-          createReadStream()
-            .pipe(
-              fs.createWriteStream(
-                path.join(__dirname, "../../public/images/", filename)
+      let imageNames = [];
+      const handleImages = async () => {
+        for await (const image of args.images) {
+          let unique = new Date().getTime().toString();
+          // Image Parse Start
+          const { filename, mimetype, createReadStream } = await image;
+          // Promisify the stream and store the file, then…
+          await new Promise((res) =>
+            createReadStream()
+              .pipe(
+                fs.createWriteStream(
+                  path.join(
+                    __dirname,
+                    "../../public/images/",
+                    unique + filename
+                  )
+                )
               )
-            )
-            .on("close", res)
-        );
-      }
-      console.log('links before parse', args.links)
+              .on("close", res)
+          )
+            .then(() => {
+              imageNames = [
+                ...imageNames,
+                process.env.PRODUCTION_APP_URL + "/images/" + unique + filename,
+              ];
+            })
+            .catch((err) => {
+              throw new Error("Error uploading image");
+            });
+          // Image Parse End
+        }
+        return imageNames;
+      };
+      await handleImages();
       const linksArr = args.links;
       const links = {};
       if (linksArr.length) {
         links.codeLink = linksArr[0];
         links.hostedLink = linksArr[1];
       }
-      console.log('links after parse', links)
       let project = new Project({
         name: args.name,
         description: args.description,
         technologies: args.technologies,
         links,
-        images: filename
-          ? process.env.PRODUCTION_APP_URL + "images/" + filename
-          : "",
+        images: imageNames.length ? imageNames : [],
         projectType: args.projectType,
         importance: args.importance,
       });
