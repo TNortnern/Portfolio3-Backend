@@ -12,6 +12,7 @@ const app = express();
 const { setupDB } = require("./config/db");
 app.use(express.static(__dirname + "/public"));
 
+
 setupDB();
 app.use(express.json());
 app.use(cors());
@@ -25,8 +26,11 @@ app.use(
     introspection: true
   })
 );
-app.get("/", function (req, res) {
-  res.send("hello world");
+app.get("/", async function (req, res) {
+  const projects = await require("./models/Projects").findById(
+    "5eb0a230d80efb478c3a810f", 'links -_id'
+  );
+  res.json({ projects });
 });
 // use routes
 

@@ -14,14 +14,20 @@ const LinkType = new GraphQLObjectType({
     codeLink: {
       type: GraphQLString,
       name: "Code Link",
-      description: "Where the code for the project is at"
+      description: "Where the code for the project is at",
+      resolve(parent, args) {
+        return parent.links.codeLink;
+      },
     },
     hostedLink: {
       type: GraphQLString,
       name: "Hosted Link",
-      description: "Where the project is hosted"
-    }
-  })
+      description: "Where the project is hosted",
+      resolve(parent, args) {
+        return parent.links.hostedLink;
+      },
+    },
+  }),
 });
 
 const ProjectType = new GraphQLObjectType({
@@ -43,8 +49,8 @@ const ProjectType = new GraphQLObjectType({
     links: {
       type: LinkType,
       name: "links",
-      resolve (parent, args) {
-        return Project.findById(parent.id).links
+      async resolve (parent, args) {
+       return Project.findById(parent.id, 'links -_id')
       }
     },
     technologies: {

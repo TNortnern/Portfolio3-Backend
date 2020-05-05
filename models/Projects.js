@@ -14,8 +14,11 @@ const projectSchema = new Schema({
     required: true,
   },
   links: {
-    type: Object,
-    required: true,
+    codeLink: {
+      type: String,
+      required: true,
+    },
+    hostedLink: String,
   },
   importance: {
     type: Number,
