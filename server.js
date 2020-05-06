@@ -27,9 +27,7 @@ app.use(
   })
 );
 app.get("/", async function (req, res) {
-  const projects = await require("./models/Projects").findById(
-    "5eb0a230d80efb478c3a810f", 'links -_id'
-  );
+  const projects = await require("./models/Projects").find
   res.json({ projects });
 });
 // use routes
