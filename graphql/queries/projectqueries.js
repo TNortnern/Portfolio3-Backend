@@ -6,7 +6,7 @@ const ProjectType = require("../types/ProjectType");
 const queries = {
   projects: {
     type: new GraphQLList(ProjectType),
-    resolve: (project, args) => Project.find(),
+    resolve: (project, args) => Project.find().sort({ importance: -1 }),
   },
   project: {
     type: ProjectType,
