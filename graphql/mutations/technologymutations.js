@@ -22,6 +22,7 @@ const mutations = {
         const { createReadStream, filename, mimetype } = await upload;
         const stream = createReadStream();
         const id = new Date().getTime().toString();
+        const url = process.env.PRODUCTION_APP_URL + "/images/" + id + filename
         const path = nodepath.join(
           __dirname,
           "../../public/images/",
@@ -61,7 +62,7 @@ const mutations = {
 
         // Record the file metadata in the DB.
         // console.log(file);
-        return file;
+        return url;
       };
       const getFile = await storeUpload(args.image);
 
@@ -74,16 +75,16 @@ const mutations = {
       let restest = ''
       await imgur
         .uploadImgur(
-        path
+        getFile
         )
         .then((result) => {
           restest = result
-          console.log(result.data.link);
+          console.log(result);
         })
         .catch((err) => {
           console.log(err);
         });
-throw new error(restest)
+throw new Error(restest)
       // throw new Error("idk");
 
       // Image Parse End
