@@ -2,9 +2,6 @@ const TechnologyType = require("../types/TechnologyType");
 const Technology = require("../../models/Technologies");
 const { GraphQLNonNull, GraphQLString, GraphQLID } = require("graphql");
 const { GraphQLUpload } = require("graphql-upload");
-const fs = require("fs");
-const path = require("path");
-const imgur = require("imgur-module");
 const { fileUpload } = require('../../helpers')
 
 const mutations = {
@@ -17,7 +14,6 @@ const mutations = {
     },
     async resolve(parent, args) {
       let image = await fileUpload(args.image)
-      throw new Error(image)
       let technology = new Technology({
         name: args.name,
         description: args.description,

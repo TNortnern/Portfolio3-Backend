@@ -9,8 +9,8 @@ const {
   GraphQLID,
 } = require("graphql");
 const { GraphQLUpload } = require("graphql-upload");
-const fs = require("fs");
-const path = require("path");
+const { fileUpload } = require("../../helpers");
+
 
 const mutations = {
   addProject: {
@@ -28,35 +28,11 @@ const mutations = {
       let imageNames = [];
       const handleImages = async () => {
         for await (const image of args.images) {
-          let unique = new Date().getTime().toString();
-          // Image Parse Start
-          const { filename, mimetype, createReadStream } = await image;
-          // Promisify the stream and store the file, then…
-          await new Promise((res) =>
-            createReadStream()
-              .pipe(
-                fs.createWriteStream(
-                  path.join(
-                    __dirname,
-                    "../../public/images/",
-                    unique + filename
-                  )
-                )
-              )
-              .on("close", res)
-          )
-            .then(() => {
+          const uploadFile = fileUpload(image)
               imageNames = [
                 ...imageNames,
-                process.env.PRODUCTION_APP_URL + "/images/" + unique + filename,
+                uploadFile,
               ];
-            })
-            .catch((err) => {
-              throw new Error("Error uploading image");
-            });
-          // Image Parse End
-        }
-        return imageNames;
       };
       await handleImages();
       const linksArr = args.links;
