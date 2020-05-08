@@ -2,21 +2,22 @@ const fs = require("fs");
 const path = require("path");
 const imgur = require("imgur-module");
 const unique = new Date().getTime().toString();
+// intilize client id
+imgur.setClientId("546c25a59c58ad7");
+
 const fileURL = (filename) => {
   return process.env.PRODUCTION_APP_URL + "/images/" + unique + filename;
 };
+
+
 exports.fileUpload = async (file) => {
   const imageURL = await upload(file);
-  // intilize client id
-  imgur.setClientId("546c25a59c58ad7");
-
   // uploading image file
   let imgurURL = "";
   let error = false;
   await imgur
     .uploadImgur(imageURL)
     .then(({ success, url }) => {
-      // imgurURL = result.url;
       if (success) imgurURL = url;
       else {
         error = true;
@@ -34,13 +35,17 @@ exports.multiFileUpload = async (images) => {
   for await (const image of images) {
     const imageURL = await upload(image);
     await imgur
-      .uploadImgur(imageURL)
-      .then(({ success, url }) => {
-        console.log("this happens");
+      .uploadImgur(
+        imageURL
+      )
+      .then(({ success, url, message }) => {
         if (success) imageNames = [...imageNames, url];
         else {
+          console.log(success);
+          console.log(message);
           error = true;
         }
+        console.log(url);
       })
       .catch((err) => {
         console.log(err);
@@ -49,7 +54,7 @@ exports.multiFileUpload = async (images) => {
       throw new Error("Error Uploading");
     }
   }
-  if (error) imageNames = []
+  if (error) imageNames = [];
   // Image Parse End
   return imageNames;
 };
