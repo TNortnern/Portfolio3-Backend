@@ -9,7 +9,7 @@ const {
   GraphQLID,
 } = require("graphql");
 const { GraphQLUpload } = require("graphql-upload");
-const { fileUpload } = require("../../helpers");
+const { multiFileUpload } = require("../../helpers");
 
 
 const mutations = {
@@ -25,16 +25,9 @@ const mutations = {
       importance: { type: GraphQLInt },
     },
     async resolve(parent, args) {
-      let imageNames = [];
-      const handleImages = async () => {
-        for await (const image of args.images) {
-          const uploadFile = fileUpload(image)
-              imageNames = [
-                ...imageNames,
-                uploadFile,
-              ];
-      };
-      await handleImages();
+     const imageNames = await multiFileUpload(args.images)
+      // throw new Error(imageNames)
+      console.log(imageNames)
       const linksArr = args.links;
       const links = {};
       if (linksArr.length) {
