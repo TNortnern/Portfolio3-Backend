@@ -71,18 +71,20 @@ const mutations = {
       imgur.setClientId("546c25a59c58ad7");
 
       // uploading image file
+      let restest = ''
       await imgur
         .uploadImgur(
         path
         )
         .then((result) => {
-          console.log(result);
+          restest = result
+          console.log(result.data.link);
         })
         .catch((err) => {
           console.log(err);
         });
-
-      throw new Error("idk");
+throw new error(restest)
+      // throw new Error("idk");
 
       // Image Parse End
       let technology = new Technology({
