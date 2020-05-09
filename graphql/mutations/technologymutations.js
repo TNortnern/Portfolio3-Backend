@@ -12,7 +12,10 @@ const mutations = {
       description: { type: GraphQLString },
       image: { type: new GraphQLNonNull(GraphQLUpload) },
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
+      if (!req.isAuth) {
+        throw new Error("Unauthenticated");
+      }
       let image = await fileUpload(args.image)
       let technology = new Technology({
         name: args.name,
@@ -28,7 +31,10 @@ const mutations = {
       name: { type: GraphQLString },
       id: { type: new GraphQLNonNull(GraphQLID) },
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
+      if (!req.isAuth) {
+        throw new Error("Unauthenticated");
+      }
       return Technology.deleteOne({
         _id: args.id,
       });

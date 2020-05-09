@@ -5,7 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const graphqlHTTP = require("express-graphql");
 const { graphqlUploadExpress } = require("graphql-upload");
-
+const isAuthed = require('./middleware/isAuthed')
 const schema = require('./graphql');
 
 const app = express();
@@ -16,6 +16,7 @@ app.use(express.static(__dirname + "/public"));
 setupDB();
 app.use(express.json());
 app.use(cors());
+app.use(isAuthed);
 app.use(
   "/graphql",
   graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),

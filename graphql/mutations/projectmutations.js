@@ -11,7 +11,6 @@ const {
 const { GraphQLUpload } = require("graphql-upload");
 const { multiFileUpload } = require("../../helpers");
 
-
 const mutations = {
   addProject: {
     type: ProjectType,
@@ -24,7 +23,10 @@ const mutations = {
       links: { type: GraphQLList(GraphQLString) },
       importance: { type: GraphQLInt },
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
+      if (!req.isAuth) {
+        throw new Error("Unauthenticated");
+      }
       const imageNames = await multiFileUpload(args.images);
       const linksArr = args.links;
       const links = {};
@@ -56,28 +58,32 @@ const mutations = {
       links: { type: GraphQLList(GraphQLString) },
       importance: { type: GraphQLInt },
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
+      if (!req.isAuth) {
+        throw new Error("Unauthenticated");
+      }
       const links = {};
       let imageNames;
-      let project = await Project.findById(args.id)
-      if (!project) throw new Error(`Couldn't find the author with an id of ${args.id}`)
-      if (args.name) project.name = args.name
-      if (args.description) project.description = args.description
-      if (args.technologies) project.technologies = args.technologies
+      let project = await Project.findById(args.id);
+      if (!project)
+        throw new Error(`Couldn't find the author with an id of ${args.id}`);
+      if (args.name) project.name = args.name;
+      if (args.description) project.description = args.description;
+      if (args.technologies) project.technologies = args.technologies;
       if (args.links) {
-         const linksArr = args.links;
-         if (linksArr.length) {
-           links.codeLink = linksArr[0];
-           links.hostedLink = linksArr[1];
-         }
-         project.links = links
+        const linksArr = args.links;
+        if (linksArr.length) {
+          links.codeLink = linksArr[0];
+          links.hostedLink = linksArr[1];
+        }
+        project.links = links;
       }
-      if (args.images) { 
+      if (args.images) {
         imageNames = await multiFileUpload(args.images);
-        project.images = imageNames
+        project.images = imageNames;
       }
-      if (args.projectType) project.projectType = args.projectType
-      if (args.importance) project.importance = args.importance
+      if (args.projectType) project.projectType = args.projectType;
+      if (args.importance) project.importance = args.importance;
       return project.save();
     },
   },
@@ -87,7 +93,10 @@ const mutations = {
       name: { type: GraphQLString },
       id: { type: new GraphQLNonNull(GraphQLID) },
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
+      if (!req.isAuth) {
+        throw new Error("Unauthenticated");
+      }
       return Project.deleteOne({
         _id: args.id,
       });

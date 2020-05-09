@@ -1,6 +1,7 @@
 const { GraphQLObjectType } = require('graphql');
 const { addTechnology , deleteTechnology} = require('./technologymutations');
 const { addProject, editProject, deleteProject } = require('./projectmutations');
+const { register, login } = require('./usermutations')
 const RootMutation = new GraphQLObjectType({
   name: "Mutations",
   fields: {
@@ -8,7 +9,9 @@ const RootMutation = new GraphQLObjectType({
     addProject,
     editProject,
     deleteProject,
-    deleteTechnology
+    deleteTechnology,
+    register,
+    login
   },
 });
 

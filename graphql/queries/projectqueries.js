@@ -12,6 +12,7 @@ const queries = {
     type: ProjectType,
     args: { id: { type: GraphQLID } },
     resolve(parent, args) {
+
       // code to get data from db / other source
       return Project.findById(args.id);
     },
