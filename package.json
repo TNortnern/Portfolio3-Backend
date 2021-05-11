@@ -24,7 +24,7 @@
     "graphql-upload": "^10.0.0",
     "imgur-module": "^1.1.0",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "mongodb": "^3.5.6",
     "mongoose": "^5.9.10"
   }
